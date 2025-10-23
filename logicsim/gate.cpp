@@ -88,3 +88,57 @@ Event* Or2Gate::update(uint64_t current_time)
 	}
   return e;
 }
+
+//NOT GATE FUNCTIONS
+NotGate::NotGate(Wire* input, Wire* o) : Gate(1,o){
+  wireInput(0, input);
+}
+
+Event* NotGate::update(uint64_t current_time){
+  char inputState = m_inputs[0] -> getState();
+  char state = 'X';
+  Event* e = nullptr;
+
+  //invert whatever state comes in
+  if(inputState == '0'){
+    state = '1';
+  }
+  else if(inputState == '1'){
+    state = '0';
+  }
+
+  if(state != m_current_state){
+    m_current_state = state;
+    uint64_t next = current_time + m_delay;
+    e = new Event {next, m_output, state};
+  }
+  
+  return e;
+}
+
+
+//XOR GATE FUNCTIONS
+XorGate::XorGate(Wire* a, Wire* b, Wire* o) : Gate(2,o){
+  wireInput(0,a);
+  wireInput(1,b);
+}
+
+Event* XorGate::update(uint64_t current_time){
+  char state = 'X';
+  Event* e = nullptr;
+  char input1 = m_inputs[0] -> getState();
+  char input2 = m_inputs[1] -> getState();
+
+  //XOR logic can be either or but NOT BOTH
+  if( (input1 == '0' && input2 == '1') || (input1 == '1' && input2 == '0') ) state = '1';
+  //undef states
+  if(input1 == 'X' || input2 == 'X') state = 'X';
+  
+  if(state != m_current_state){
+    m_current_state = state;
+    uint64_t next = current_time + m_delay;
+    e = new Event{next, m_output, state};
+  }
+
+  return e;
+}

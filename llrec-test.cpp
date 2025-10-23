@@ -86,9 +86,42 @@ int main(int argc, char* argv[])
     print(head);
 
     // Test out your linked list code
+    cout << "\nTesting llpivot:" << endl;
+    Node* smaller = NULL;
+    Node* larger = NULL;
+    int pivot = 7;
+
+    llpivot(head, smaller, larger, pivot);
+
+    cout << "Smaller list ( Less than or equal to 7): ";
+    print(smaller);
+
+    cout << "Larger list ( Greater than 7): ";
+    print(larger);
 
 
+    cout << "\nTestign llfilter:" << endl;
 
+    //pred is removing even nums
+    struct IsEven {
+      bool operator()(int value){
+        return value % 2 == 0;
+      }
+    };
+    
+    head = readList(argv[1]);
+    cout << "Og list: ";
+    print(head);
+
+    IsEven evenPred;
+    head = llfilter(head, evenPred);
+
+    cout << "Filtered list (no even nums): ";
+    print(head);
+
+    dealloc(head);
+    dealloc(smaller);
+    dealloc(larger);
     
     return 0;
 
